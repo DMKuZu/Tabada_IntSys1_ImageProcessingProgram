@@ -20,10 +20,14 @@
     
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Program Mode">
+                <MenuItem Header="Basic Mode"/>
+                <MenuItem Header="Subtract Mode"/>
+                <MenuItem Header="Webcam Mode"/>
+            </MenuItem>
             <MenuItem Header="Program Option">
-                <MenuItem Header="Load Foreground" 
-                          Command="{Binding LoadForegroundCommand}"/>
-                <MenuItem Header="Load Background"/>
+                <MenuItem Header="Load Image" 
+                          Command="{Binding LoadBasicImageCommand}"/>
                 <MenuItem Header="Save Processed Image"
                           Command="{Binding SaveImageCommand}"/>
                 <MenuItem Header="Reset Program" 
@@ -43,7 +47,7 @@
             </MenuItem>
         </Menu>
         
-        <Grid RowDefinitions="*,*" ColumnDefinitions="*,*,*">
+        <Grid RowDefinitions="40,*" ColumnDefinitions="*,*">
             <Grid.Styles>
                 <Style Selector="TextBlock">
                     <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -61,12 +65,10 @@
                     <Setter Property="MinHeight" Value="250"/>
                 </Style>
             </Grid.Styles>
-            <TextBlock Grid.Row="0" Grid.Column="0"> Foreground Image </TextBlock>
-            <Image Grid.Row="1" Grid.Column="0" Source="{Binding ForegroundImage}"/>  
-            <TextBlock Grid.Row="0" Grid.Column="1"> Background Image </TextBlock>
-            <Image Grid.Row="1" Grid.Column="1"/>
-            <TextBlock Grid.Row="0" Grid.Column="2"> Processed Image </TextBlock>
-            <Image Grid.Row="1" Grid.Column="2" Source="{Binding ProcessedImage}"/>
+            <TextBlock Grid.Row="0" Grid.Column="0"> Image </TextBlock>
+            <Image Grid.Row="1" Grid.Column="0" Source="{Binding BasicImage}"/>  
+            <TextBlock Grid.Row="0" Grid.Column="1"> Output </TextBlock>
+            <Image Grid.Row="1" Grid.Column="1" Source="{Binding ProcessedImage}"/>
         </Grid>
     </DockPanel>
  

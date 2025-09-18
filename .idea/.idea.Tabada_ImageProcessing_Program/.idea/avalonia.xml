@@ -4,6 +4,7 @@
     <option name="projectPerEditor">
       <map>
         <entry key="Views/MainWindow.axaml" value="Tabada_ImageProcessing_Program.csproj" />
+        <entry key="Views/SubtractMode.axaml" value="Tabada_ImageProcessing_Program.csproj" />
       </map>
     </option>
   </component>

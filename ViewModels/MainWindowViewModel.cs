@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
@@ -17,7 +18,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly ImageProcessor _processor = new();
 
     [ObservableProperty]
-    private Bitmap? _foregroundImage;
+    private Bitmap? _basicImage;
 
     [ObservableProperty]
     private Bitmap? _processedImage;
@@ -30,7 +31,7 @@ public partial class MainWindowViewModel : ViewModelBase
         InvertCommand = new RelayCommand(OnInvert);
         HistogramCommand = new RelayCommand(OnHistogram);
         ResetCommand = new RelayCommand(OnReset);
-        LoadForegroundCommand = new AsyncRelayCommand(OnLoadForeground);
+        LoadBasicImageCommand = new AsyncRelayCommand(OnLoadBasicImage);
         SaveImageCommand = new AsyncRelayCommand(OnSaveImage);
     }
 
@@ -40,10 +41,10 @@ public partial class MainWindowViewModel : ViewModelBase
     public ICommand InvertCommand { get; }
     public ICommand HistogramCommand { get; }
     public ICommand ResetCommand { get; }
-    public ICommand LoadForegroundCommand { get; }
+    public ICommand LoadBasicImageCommand { get; }
     public ICommand SaveImageCommand { get; }
 
-    private async Task OnLoadForeground()
+    private async Task OnLoadBasicImage()
     {
         var dialog = new OpenFileDialog
         {
@@ -57,7 +58,7 @@ public partial class MainWindowViewModel : ViewModelBase
         if (result != null && result.Length > 0)
         {
             var bmp = _processor.LoadImage(result[0]);
-            ForegroundImage = ConvertToAvaloniaBitmap(bmp);
+            BasicImage = ConvertToAvaloniaBitmap(bmp);
         }
     }
 
@@ -102,14 +103,14 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void OnHistogram()
     {
-        var hist = _processor.Histogram();
-        // TODO: You can bind this data to a chart later
+        _processor.DrawHistogram();
+        UpdateProcessed();
     }
 
     private void OnReset()
     {
         _processor.Reset();
-        ForegroundImage = null;
+        BasicImage = null;
         ProcessedImage = null;
         UpdateProcessed();
     }
@@ -130,7 +131,7 @@ public partial class MainWindowViewModel : ViewModelBase
         using var ms = new MemoryStream(data.ToArray());
         return new Bitmap(ms);
     }
-
+    
     private static Window GetMainWindow()
     {
         return (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)
