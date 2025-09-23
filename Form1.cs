@@ -204,5 +204,6 @@ namespace Tabada_IntSys1_ImageProcessingProgram
 
             SetSubtractPictureBox(image);
         }
+
     }
 }
