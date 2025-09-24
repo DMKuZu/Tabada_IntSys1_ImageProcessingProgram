@@ -17,6 +17,7 @@ namespace Tabada_IntSys1_ImageProcessingProgram
         private Timer progressResetTimer;
         private Timer outputViewTimer;
 
+
         public MainForm()
         {
             InitializeComponent();
@@ -28,7 +29,6 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             _videoProcessor.FrameReady += (bmp) =>
             {
                 Bitmap webcamBmp = (Bitmap)bmp.Clone();
-                // Always update pbWebcamView on the UI thread
                 if (pbWebcamView.InvokeRequired)
                     pbWebcamView.Invoke(new Action(() => {
                         pbWebcamView.Image?.Dispose();
@@ -39,7 +39,6 @@ namespace Tabada_IntSys1_ImageProcessingProgram
                     pbWebcamView.Image?.Dispose();
                     pbWebcamView.Image = webcamBmp;
                 }
-                // No processing for pbOutputView here!
             };
             //SetDefaultImages();
         }
@@ -329,7 +328,7 @@ namespace Tabada_IntSys1_ImageProcessingProgram
         private void InitializeOutputViewTimer()
         {
             outputViewTimer = new Timer();
-            outputViewTimer.Interval = 2000; // 2 second
+            outputViewTimer.Interval = 1000; // 1 second
             outputViewTimer.Tick += OutputViewTimer_Tick;
         }
 
@@ -339,37 +338,58 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             ResetProgress();
         }
 
+        private volatile bool _isProcessingOutputView = false;
         private void OutputViewTimer_Tick(object sender, EventArgs e)
         {
-            // Only process if a webcam mode is selected
-            if (_webcamMode == WebcamProcessMode.None)
+            if (_isProcessingOutputView || _webcamMode == WebcamProcessMode.None)
                 return;
+            _isProcessingOutputView = true;
 
             Bitmap src = _videoProcessor.GetLatestFrame();
             if (src == null)
+            {
+                _isProcessingOutputView = false;
                 return;
+            }
 
-            Bitmap processed = null;
-            switch (_webcamMode)
+            // Process in background thread
+            System.Threading.ThreadPool.QueueUserWorkItem(_ =>
             {
-                case WebcamProcessMode.Grayscale:
-                    processed = _videoProcessor.ToGrayscale(src);
-                    break;
-                case WebcamProcessMode.Invert:
-                    processed = _videoProcessor.ToInvert(src);
-                    break;
-                case WebcamProcessMode.Sepia:
-                    processed = _videoProcessor.ToSepia(src);
-                    break;
-                case WebcamProcessMode.Subtract:
-                    processed = _videoProcessor.ToSubtract(src, null); // no background for webcam
-                    break;
-            }
-            src.Dispose();
-            if (processed != null)
-            {
-                pbOutputView.Image = processed;
-            }
+                Bitmap processed = null;
+                switch (_webcamMode)
+                {
+                    case WebcamProcessMode.Grayscale:
+                        processed = _videoProcessor.ToGrayscale(src);
+                        break;
+                    case WebcamProcessMode.Invert:
+                        processed = _videoProcessor.ToInvert(src);
+                        break;
+                    case WebcamProcessMode.Sepia:
+                        processed = _videoProcessor.ToSepia(src);
+                        break;
+                    case WebcamProcessMode.Subtract:
+                        processed = _videoProcessor.ToSubtract(src);
+                        break;
+                }
+                src.Dispose();
+                if (processed != null)
+                {
+                    if (pbOutputView.InvokeRequired)
+                    {
+                        pbOutputView.Invoke(new Action(() =>
+                        {
+                            pbOutputView.Image?.Dispose();
+                            pbOutputView.Image = processed;
+                        }));
+                    }
+                    else
+                    {
+                        pbOutputView.Image?.Dispose();
+                        pbOutputView.Image = processed;
+                    }
+                }
+                _isProcessingOutputView = false;
+            });
         }
     }
 }

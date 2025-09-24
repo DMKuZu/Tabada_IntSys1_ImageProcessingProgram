@@ -13,6 +13,7 @@ namespace Tabada_IntSys1_ImageProcessingProgram
         private Bitmap _latestFrame;
         private DateTime _lastFrameTime = DateTime.MinValue;
         private readonly object _frameLock = new object();
+        private Bitmap _webcamSubtractBackground;
 
         public event Action<Bitmap> FrameReady;
 
@@ -27,6 +28,8 @@ namespace Tabada_IntSys1_ImageProcessingProgram
                 cb.Items.Add(dev.Name);
                 cb.SelectedIndex = 0;
             }
+
+            _webcamSubtractBackground = null;
         }
 
         public void OnActivate(int selectedIndex)
@@ -119,11 +122,13 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             }
             return bmp;
         }
-        public Bitmap ToSubtract(Bitmap src, Bitmap background = null)
+        public Bitmap ToSubtract(Bitmap src)
         {
             // Use the same logic as SubtractProcessor.OnSubtract, but src is foreground, background is optional
             if (src == null)
                 return null;
+
+            Bitmap background = _webcamSubtractBackground;
 
             int width = src.Width;
             int height = src.Height;
@@ -171,6 +176,17 @@ namespace Tabada_IntSys1_ImageProcessingProgram
                 return null;
             }
         }
-
+        public void SetWebcamSubtractBackground(string backgroundPath)
+        {
+            if (_webcamSubtractBackground != null)
+            {
+                _webcamSubtractBackground.Dispose();
+                _webcamSubtractBackground = null;
+            }
+            if (!string.IsNullOrEmpty(backgroundPath) && System.IO.File.Exists(backgroundPath))
+            {
+                _webcamSubtractBackground = new Bitmap(backgroundPath);
+            }
+        }
     }
 }

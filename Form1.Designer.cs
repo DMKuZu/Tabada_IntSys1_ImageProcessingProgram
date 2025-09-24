@@ -54,6 +54,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.pbForegroundImage = new System.Windows.Forms.PictureBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -63,11 +65,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.pbWebcamView = new System.Windows.Forms.PictureBox();
             this.pbOutputView = new System.Windows.Forms.PictureBox();
-            this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbOutputImage)).BeginInit();
@@ -79,7 +78,6 @@
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbWebcamView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbOutputView)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -374,6 +372,28 @@
             this.tabPage3.Text = "Webcam Mode";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(836, 564);
+            this.button5.MinimumSize = this.button5.Size;
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(150, 30);
+            this.button5.TabIndex = 39;
+            this.button5.Text = "Clear Effects";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.btnWebcamClearEffects_Click);
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(715, 688);
+            this.button4.MinimumSize = this.button4.Size;
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(150, 30);
+            this.button4.TabIndex = 38;
+            this.button4.Text = "Subtract";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.btnWebcamSubtract_Click);
+            // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
@@ -462,11 +482,6 @@
             this.pbOutputView.TabIndex = 37;
             this.pbOutputView.TabStop = false;
             // 
-            // fileSystemWatcher1
-            // 
-            this.fileSystemWatcher1.EnableRaisingEvents = true;
-            this.fileSystemWatcher1.SynchronizingObject = this;
-            // 
             // progressBar1
             // 
             this.progressBar1.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -477,28 +492,6 @@
             this.progressBar1.Size = new System.Drawing.Size(1200, 10);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar1.TabIndex = 1;
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(715, 688);
-            this.button4.MinimumSize = this.button4.Size;
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(150, 30);
-            this.button4.TabIndex = 38;
-            this.button4.Text = "Subtract";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.btnWebcamSubtract_Click);
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(836, 564);
-            this.button5.MinimumSize = this.button5.Size;
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(150, 30);
-            this.button5.TabIndex = 39;
-            this.button5.Text = "Clear Effects";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.btnWebcamClearEffects_Click);
             // 
             // MainForm
             // 
@@ -524,7 +517,6 @@
             this.tabPage3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbWebcamView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbOutputView)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -555,7 +547,6 @@
         private System.Windows.Forms.Button btnLoadBackground;
         private System.Windows.Forms.Button btnSaveImage2;
         private System.Windows.Forms.Button btnLoadForeground;
-        private System.IO.FileSystemWatcher fileSystemWatcher1;
         private System.Windows.Forms.Button btnSubtract;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
@@ -564,12 +555,12 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.PictureBox pbWebcamView;
         private System.Windows.Forms.PictureBox pbOutputView;
-        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 
