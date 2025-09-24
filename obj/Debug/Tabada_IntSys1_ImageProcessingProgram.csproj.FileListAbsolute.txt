@@ -7,3 +7,10 @@ C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\obj\Debug\Ta
 C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\obj\Debug\Tabada_IntSys1_ImageProcessingProgram.csproj.CoreCompileInputs.cache
 C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\obj\Debug\Tabada_IntSys1_ImageProcessingProgram.exe
 C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\obj\Debug\Tabada_IntSys1_ImageProcessingProgram.pdb
+C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\bin\Debug\AForge.dll
+C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\bin\Debug\AForge.Video.DirectShow.dll
+C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\bin\Debug\AForge.Video.dll
+C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\bin\Debug\AForge.xml
+C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\bin\Debug\AForge.Video.xml
+C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\bin\Debug\AForge.Video.DirectShow.xml
+C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\obj\Debug\Tabada_I.110EBBD8.Up2Date

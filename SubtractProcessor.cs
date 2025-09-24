@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 
 namespace Tabada_IntSys1_ImageProcessingProgram
 {
@@ -64,13 +61,13 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             _outputImage = null;
         }
 
-        public Bitmap OnSubtract()
+        public Bitmap OnSubtract(Action<int> reportProgress = null)
         {
             if (_foreground == null || _background == null)
                 return null;
 
-            int width = Math.Min(_foreground.Width, _background.Width);
-            int height = Math.Min(_foreground.Height, _background.Height);
+            int width = Math.Max(_foreground.Width, _background.Width);
+            int height = Math.Max(_foreground.Height, _background.Height);
 
             Color colorToSubtract = Color.FromArgb(0,255,0); // green 
             int greyCTS = (colorToSubtract.R + colorToSubtract.G + colorToSubtract.B) / 3;
@@ -82,16 +79,23 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             {
                 for (int x = 0; x < width; x++)
                 {
-                    Color fgPixel = _foreground.GetPixel(x, y);
-                    Color bgPixel = _background.GetPixel(x, y);
+                    Color fgPixel = Color.Black;
+                    Color bgPixel = Color.Black;
+                    if (x < _foreground.Width && y < _foreground.Height)
+                        fgPixel = _foreground.GetPixel(x, y);
+                    if (x < _background.Width && y < _background.Height)
+                        bgPixel = _background.GetPixel(x, y);
                     int greyFG = (fgPixel.R + fgPixel.G + fgPixel.B) / 3;
                     int subtractValue = Math.Abs(greyFG - greyCTS);
 
-                    if(subtractValue > threshold)
+                    if(x < _foreground.Width && y < _foreground.Height && subtractValue > threshold)
                         bmp.SetPixel(x, y, fgPixel);
-                    else
+                    else if(x < _background.Width && y < _background.Height)
                         bmp.SetPixel(x, y, bgPixel);
+                    else
+                        bmp.SetPixel(x, y, Color.Black);
                 }
+                reportProgress?.Invoke((int)((y + 1) * 100.0 / height));
             }
 
             SetOutput(bmp);

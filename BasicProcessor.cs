@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Security;
-using System.Text;
-using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Tabada_IntSys1_ImageProcessingProgram
 {
@@ -54,13 +49,13 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             _outputImage = null;
         }
 
-        public Bitmap OnCopy()
+        public Bitmap OnCopy(Action<int> reportProgress = null)
         {
             if (_inputImage == null)
                 return null;
             
             Bitmap bmp = new Bitmap(_inputImage.Width, _inputImage.Height);
-
+            int total = _inputImage.Height;
             for (int y = 0; y < _inputImage.Height; y++)
             {
                 for (int x = 0; x < _inputImage.Width; x++)
@@ -68,19 +63,20 @@ namespace Tabada_IntSys1_ImageProcessingProgram
                     System.Drawing.Color pixel = _inputImage.GetPixel(x, y);
                     bmp.SetPixel(x, y, pixel);
                 }
+                reportProgress?.Invoke((int)((y + 1) * 100.0 / total));
             }
 
             SetOutput(bmp);
             return _outputImage;
         }
 
-        public Bitmap OnInvert()
+        public Bitmap OnInvert(Action<int> reportProgress = null)
         {
             if (_inputImage == null)
                 return null;
 
             Bitmap bmp = new Bitmap(_inputImage.Width, _inputImage.Height);
-
+            int total = _inputImage.Height;
             for (int y = 0; y < _inputImage.Height; y++)
             {
                 for (int x = 0; x < _inputImage.Width; x++)
@@ -91,41 +87,42 @@ namespace Tabada_IntSys1_ImageProcessingProgram
                     int b = 255 - pixel.B;
                     bmp.SetPixel(x, y, System.Drawing.Color.FromArgb(r, g, b));
                 }
+                reportProgress?.Invoke((int)((y + 1) * 100.0 / total));
             }
 
             SetOutput(bmp);
             return _outputImage;
         }
 
-        public Bitmap OnGrayScale()
+        public Bitmap OnGrayScale(Action<int> reportProgress = null)
         {
             if (_inputImage == null)
                 return null;
 
             Bitmap bmp = new Bitmap(_inputImage.Width, _inputImage.Height);
-
+            int total = _inputImage.Height;
             for (int y = 0; y < _inputImage.Height; y++)
             {
                 for (int x = 0; x < _inputImage.Width; x++)
                 {
                     System.Drawing.Color pixel = _inputImage.GetPixel(x, y);
-                    //int gray = (int)(pixel.R * 0.299 + pixel.G * 0.587 + pixel.B * 0.114);
                     int gray = (pixel.R + pixel.G + pixel.B) / 3;
                     bmp.SetPixel(x, y, System.Drawing.Color.FromArgb(gray, gray, gray));
                 }
+                reportProgress?.Invoke((int)((y + 1) * 100.0 / total));
             }
 
             SetOutput(bmp);
             return _outputImage;
         }
         
-        public Bitmap OnSepia()
+        public Bitmap OnSepia(Action<int> reportProgress = null)
         {
             if (_inputImage == null)
                 return null;
 
             Bitmap bmp = new Bitmap(_inputImage.Width, _inputImage.Height);
-
+            int total = _inputImage.Height;
             for (int y = 0; y < _inputImage.Height; y++)
             {
                 for (int x = 0; x < _inputImage.Width; x++)
@@ -142,6 +139,7 @@ namespace Tabada_IntSys1_ImageProcessingProgram
 
                     bmp.SetPixel(x, y, System.Drawing.Color.FromArgb(r, g, b));
                 }
+                reportProgress?.Invoke((int)((y + 1) * 100.0 / total));
             }
 
             SetOutput(bmp);
