@@ -17,7 +17,6 @@ namespace Tabada_IntSys1_ImageProcessingProgram
         private Timer progressResetTimer;
         private Timer outputViewTimer;
 
-
         public MainForm()
         {
             InitializeComponent();
@@ -390,6 +389,42 @@ namespace Tabada_IntSys1_ImageProcessingProgram
                 }
                 _isProcessingOutputView = false;
             });
+        }
+
+        private void button6_Click(object sender, EventArgs e) // set subtract background
+        {
+            var dialog = new OpenFileDialog
+            {
+                Filter = "Image Files|*.png;*.jpg;*.jpeg"
+            };
+
+            DialogResult result = dialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                string filePath = dialog.FileName;
+
+                _videoProcessor.SetWebcamSubtractBackground(filePath);
+            }
+        }
+
+        private void button7_Click(object sender, EventArgs e) // save latest frame
+        {
+            if(_videoProcessor.GetLatestFrame() == null)
+                return;
+
+            var dialog = new SaveFileDialog
+            {
+                Filter = "PNG Image|*.png|JPEG Image|*.jpg;*.jpeg"
+            };
+
+            DialogResult result = dialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                string filePath = dialog.FileName;
+                _videoProcessor.onSaveLatestFrame(filePath);
+            }
         }
     }
 }

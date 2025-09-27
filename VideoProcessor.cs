@@ -30,6 +30,21 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             }
 
             _webcamSubtractBackground = null;
+            _latestFrame = null;
+        }
+
+        public Bitmap GetLatestFrame()
+        {
+            lock (_frameLock)
+            {
+                if (_latestFrame != null)
+                    return (Bitmap)_latestFrame.Clone();
+                return null;
+            }
+        }
+        public void onSaveLatestFrame(string filePath)
+        {
+            GetLatestFrame()?.Save(filePath);
         }
 
         public void OnActivate(int selectedIndex)
@@ -124,19 +139,18 @@ namespace Tabada_IntSys1_ImageProcessingProgram
         }
         public Bitmap ToSubtract(Bitmap src)
         {
-            // Use the same logic as SubtractProcessor.OnSubtract, but src is foreground, background is optional
-            if (src == null)
-                return null;
-
+            // src is the foreground which is the latest frame of the webcam
             Bitmap background = _webcamSubtractBackground;
+
+            if (src == null || background == null)
+                return null;
 
             int width = src.Width;
             int height = src.Height;
-            if (background != null)
-            {
-                width = Math.Max(src.Width, background.Width);
-                height = Math.Max(src.Height, background.Height);
-            }
+
+
+            width = Math.Max(src.Width, background.Width);
+            height = Math.Max(src.Height, background.Height);
 
             Color colorToSubtract = Color.FromArgb(0, 255, 0); // green
             int greyCTS = (colorToSubtract.R + colorToSubtract.G + colorToSubtract.B) / 3;
@@ -167,26 +181,9 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             }
             return bmp;
         }
-        public Bitmap GetLatestFrame()
-        {
-            lock (_frameLock)
-            {
-                if (_latestFrame != null)
-                    return (Bitmap)_latestFrame.Clone();
-                return null;
-            }
-        }
         public void SetWebcamSubtractBackground(string backgroundPath)
         {
-            if (_webcamSubtractBackground != null)
-            {
-                _webcamSubtractBackground.Dispose();
-                _webcamSubtractBackground = null;
-            }
-            if (!string.IsNullOrEmpty(backgroundPath) && System.IO.File.Exists(backgroundPath))
-            {
-                _webcamSubtractBackground = new Bitmap(backgroundPath);
-            }
+            _webcamSubtractBackground = new Bitmap(backgroundPath);
         }
     }
 }

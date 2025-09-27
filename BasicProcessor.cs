@@ -22,25 +22,23 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             _outputImage = bmp;
         }
 
-        public Bitmap OnLoadImage(string filePath)
+        public void OnLoadImage(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
-                return null;
+                return;
 
             SetInput(new Bitmap(filePath));
-            return _inputImage;
         }
         public bool isOutputNull()
         {
             return _outputImage == null;
         }
-        public Bitmap OnSaveImage(string filePath) 
+        public void OnSaveImage(string filePath) 
         {
             if (string.IsNullOrEmpty(filePath) || _outputImage == null)
-                return null;
+                return;
             
             _outputImage.Save(filePath);
-            return _outputImage;
         }
 
         public void OnClear()

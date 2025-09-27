@@ -26,33 +26,30 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             _outputImage = bmp;
         }
 
-        public Bitmap OnLoadForeground(string filePath)
+        public void OnLoadForeground(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
-                return null;
+                return;
 
             SetForeground(new Bitmap(filePath));
-            return _foreground;
         }
-        public Bitmap OnLoadBackground(string filePath)
+        public void OnLoadBackground(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
-                return null;
+                return;
 
             SetBackground(new Bitmap(filePath));
-            return _background;
         }
         public bool isOutputNull()
         {
             return _outputImage == null;
         }
-        public Bitmap OnSaveImage(string filePath)
+        public void OnSaveImage(string filePath)
         {
             if (string.IsNullOrEmpty(filePath) || _outputImage == null)
-                return null;
+                return;
 
             _outputImage.Save(filePath);
-            return _outputImage;
         }
         public void OnClear()
         {

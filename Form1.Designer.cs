@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.btnClearImages1 = new System.Windows.Forms.Button();
@@ -54,6 +53,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.pbForegroundImage = new System.Windows.Forms.PictureBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
@@ -66,7 +67,6 @@
             this.pbWebcamView = new System.Windows.Forms.PictureBox();
             this.pbOutputView = new System.Windows.Forms.PictureBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbOutputImage)).BeginInit();
@@ -352,6 +352,8 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.button7);
+            this.tabPage3.Controls.Add(this.button6);
             this.tabPage3.Controls.Add(this.button5);
             this.tabPage3.Controls.Add(this.button4);
             this.tabPage3.Controls.Add(this.checkBox1);
@@ -372,9 +374,31 @@
             this.tabPage3.Text = "Webcam Mode";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(498, 16);
+            this.button7.MinimumSize = this.button7.Size;
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(200, 30);
+            this.button7.TabIndex = 41;
+            this.button7.Text = "Save Latest Frame";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(174, 564);
+            this.button6.MinimumSize = this.button6.Size;
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(200, 30);
+            this.button6.TabIndex = 40;
+            this.button6.Text = "Set Subtract Background";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(836, 564);
+            this.button5.Location = new System.Drawing.Point(829, 564);
             this.button5.MinimumSize = this.button5.Size;
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(150, 30);
@@ -385,7 +409,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(715, 688);
+            this.button4.Location = new System.Drawing.Point(655, 688);
             this.button4.MinimumSize = this.button4.Size;
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(150, 30);
@@ -408,7 +432,7 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(38, 595);
+            this.comboBox1.Location = new System.Drawing.Point(38, 629);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(500, 28);
             this.comboBox1.TabIndex = 34;
@@ -426,7 +450,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(715, 629);
+            this.button2.Location = new System.Drawing.Point(655, 629);
             this.button2.MinimumSize = this.button2.Size;
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(150, 30);
@@ -560,7 +584,8 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button7;
     }
 }
 
