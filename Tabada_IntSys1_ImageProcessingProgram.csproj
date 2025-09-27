@@ -54,6 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BitmapFilter.cs" />
+    <Compile Include="ConvolutionMatrix.cs" />
     <Compile Include="ImageProcessor.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>

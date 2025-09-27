@@ -7,16 +7,6 @@ namespace Tabada_IntSys1_ImageProcessingProgram
 {
     internal class ImageProcessor
     {
-        public enum ProcessingMode
-        {
-            None,
-            Copy,
-            Grayscale,
-            Invert,
-            Sepia,
-            Histogram,
-            Subtract
-        }
         public ImageProcessor()
         {
         }
