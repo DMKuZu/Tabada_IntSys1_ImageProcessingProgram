@@ -7,23 +7,67 @@ namespace Tabada_IntSys1_ImageProcessingProgram
 {
     internal class ImageProcessor
     {
+        public enum ProcessingMode
+        {
+            None,
+            Copy,
+            Grayscale,
+            Invert,
+            Sepia,
+            Histogram,
+            Subtract
+        }
         public ImageProcessor()
         {
         }
 
         // COpy, Grayscale, Invert, Sepia, Subtract, Histogram
+        private static Bitmap convertTo24bpppRgb(Bitmap img)
+        {
+            Bitmap safeBmp = new Bitmap(img.Width, img.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            using (Graphics g = Graphics.FromImage(safeBmp))
+            {
+                g.DrawImage(img, 0, 0, img.Width, img.Height);
+            }
+            return safeBmp;
+        }
         public Bitmap ToCopy(Bitmap bmp)
         {
             if (bmp == null)
                 throw new Exception("Image Source is not available.");
-            return (Bitmap)bmp.Clone();
+            Bitmap src = convertTo24bpppRgb(bmp);
+            Bitmap clone = new Bitmap(src.Width, src.Height, PixelFormat.Format24bppRgb);
+            Rectangle rect = new Rectangle(0, 0, src.Width, src.Height);
+            BitmapData srcData = src.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+            BitmapData cloneData = clone.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
+            int stride = srcData.Stride;
+            int height = src.Height;
+            int width = src.Width;
+            unsafe
+            {
+                byte* srcPtr = (byte*)srcData.Scan0;
+                byte* clonePtr = (byte*)cloneData.Scan0;
+                for (int y = 0; y < height; y++)
+                {
+                    byte* srcRow = srcPtr + (y * stride);
+                    byte* cloneRow = clonePtr + (y * stride);
+                    for (int x = 0; x < width * 3; x++)
+                    {
+                        cloneRow[x] = srcRow[x];
+                    }
+                }
+            }
+            src.UnlockBits(srcData);
+            clone.UnlockBits(cloneData);
+            return clone;
         }
 
         public Bitmap ToGrayScale(Bitmap bmp)
         {
             if (bmp == null)
                 throw new Exception("Image Source is not available.");
-            Bitmap clone = (Bitmap)bmp.Clone();
+            Bitmap src = convertTo24bpppRgb(bmp);
+            Bitmap clone = (Bitmap)src.Clone();
             Rectangle rect = new Rectangle(0, 0, clone.Width, clone.Height);
             BitmapData bmpData = clone.LockBits(rect, ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
             int stride = bmpData.Stride;
@@ -56,7 +100,8 @@ namespace Tabada_IntSys1_ImageProcessingProgram
         {
             if (bmp == null)
                 throw new Exception("Image Source is not available.");
-            Bitmap clone = (Bitmap)bmp.Clone();
+            Bitmap src = convertTo24bpppRgb(bmp);
+            Bitmap clone = (Bitmap)src.Clone();
             Rectangle rect = new Rectangle(0, 0, clone.Width, clone.Height);
             BitmapData bmpData = clone.LockBits(rect, ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
             int stride = bmpData.Stride;
@@ -88,7 +133,8 @@ namespace Tabada_IntSys1_ImageProcessingProgram
         {
             if (bmp == null)
                 throw new Exception("Image Source is not available.");
-            Bitmap clone = (Bitmap)bmp.Clone();
+            Bitmap src = convertTo24bpppRgb(bmp);
+            Bitmap clone = (Bitmap)src.Clone();
             Rectangle rect = new Rectangle(0, 0, clone.Width, clone.Height);
             BitmapData bmpData = clone.LockBits(rect, ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
             int stride = bmpData.Stride;
@@ -123,20 +169,20 @@ namespace Tabada_IntSys1_ImageProcessingProgram
         {
             if (bmp == null)
                 throw new Exception("Image Source is not available.");
-
+            Bitmap src = convertTo24bpppRgb(bmp);
             // Calculate histogram
             int[] histogram = new int[256];
-            Rectangle origRect = new Rectangle(0, 0, bmp.Width, bmp.Height);
-            BitmapData origData = bmp.LockBits(origRect, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+            Rectangle origRect = new Rectangle(0, 0, src.Width, src.Height);
+            BitmapData origData = src.LockBits(origRect, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
             int origStride = origData.Stride;
 
             unsafe
             {
                 byte* origPtr = (byte*)origData.Scan0;
-                for (int y = 0; y < bmp.Height; y++)
+                for (int y = 0; y < src.Height; y++)
                 {
                     byte* row = origPtr + (y * origStride);
-                    for (int x = 0; x < bmp.Width * 3; x += 3)
+                    for (int x = 0; x < src.Width * 3; x += 3)
                     {
                         byte b = row[x];
                         byte g = row[x + 1];
@@ -146,7 +192,7 @@ namespace Tabada_IntSys1_ImageProcessingProgram
                     }
                 }
             }
-            bmp.UnlockBits(origData);
+            src.UnlockBits(origData);
 
             // Create histogram image for 350x350 pbOutput
             int histWidth = 350;
@@ -193,16 +239,19 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             if (front == null || back == null)
                 throw new Exception("Foreground or Background image is not available.");
 
-            int width = Math.Min(front.Width, back.Width);
-            int height = Math.Min(front.Height, back.Height);
+            Bitmap frontSrc = convertTo24bpppRgb(front);
+            Bitmap backSrc = convertTo24bpppRgb(back);
+
+            int width = Math.Min(frontSrc.Width, backSrc.Width);
+            int height = Math.Min(frontSrc.Height, backSrc.Height);
 
             Bitmap frontClone = new Bitmap(width, height, PixelFormat.Format24bppRgb);
             Bitmap backClone = new Bitmap(width, height, PixelFormat.Format24bppRgb);
 
             using (Graphics g = Graphics.FromImage(frontClone))
-                g.DrawImage(front, 0, 0, width, height);
+                g.DrawImage(frontSrc, 0, 0, width, height);
             using (Graphics g = Graphics.FromImage(backClone))
-                g.DrawImage(back, 0, 0, width, height);
+                g.DrawImage(backSrc, 0, 0, width, height);
 
             Bitmap result = new Bitmap(width, height, PixelFormat.Format24bppRgb);
             Rectangle rect = new Rectangle(0, 0, width, height);
@@ -251,7 +300,6 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             backClone.UnlockBits(backData);
             return result;
         }
-
     }
 
 }

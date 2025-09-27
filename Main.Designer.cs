@@ -55,32 +55,32 @@
             // 
             // pbSource
             // 
-            this.pbSource.Location = new System.Drawing.Point(12, 110);
+            this.pbSource.Location = new System.Drawing.Point(13, 36);
             this.pbSource.Name = "pbSource";
-            this.pbSource.Size = new System.Drawing.Size(350, 350);
+            this.pbSource.Size = new System.Drawing.Size(550, 550);
             this.pbSource.TabIndex = 0;
             this.pbSource.TabStop = false;
             // 
             // pbBackground
             // 
-            this.pbBackground.Location = new System.Drawing.Point(437, 110);
+            this.pbBackground.Location = new System.Drawing.Point(638, 36);
             this.pbBackground.Name = "pbBackground";
-            this.pbBackground.Size = new System.Drawing.Size(350, 350);
+            this.pbBackground.Size = new System.Drawing.Size(550, 550);
             this.pbBackground.TabIndex = 1;
             this.pbBackground.TabStop = false;
             // 
             // pbOutput
             // 
-            this.pbOutput.Location = new System.Drawing.Point(838, 110);
+            this.pbOutput.Location = new System.Drawing.Point(321, 614);
             this.pbOutput.Name = "pbOutput";
-            this.pbOutput.Size = new System.Drawing.Size(350, 350);
+            this.pbOutput.Size = new System.Drawing.Size(550, 550);
             this.pbOutput.TabIndex = 2;
             this.pbOutput.TabStop = false;
             // 
             // cbWebcamActivator
             // 
             this.cbWebcamActivator.AutoSize = true;
-            this.cbWebcamActivator.Location = new System.Drawing.Point(86, 552);
+            this.cbWebcamActivator.Location = new System.Drawing.Point(12, 695);
             this.cbWebcamActivator.Name = "cbWebcamActivator";
             this.cbWebcamActivator.Size = new System.Drawing.Size(239, 24);
             this.cbWebcamActivator.TabIndex = 3;
@@ -157,7 +157,7 @@
             // 
             // btnLoadSource
             // 
-            this.btnLoadSource.Location = new System.Drawing.Point(124, 466);
+            this.btnLoadSource.Location = new System.Drawing.Point(13, 599);
             this.btnLoadSource.Name = "btnLoadSource";
             this.btnLoadSource.Size = new System.Drawing.Size(150, 60);
             this.btnLoadSource.TabIndex = 5;
@@ -167,7 +167,7 @@
             // 
             // btnLoadBackground
             // 
-            this.btnLoadBackground.Location = new System.Drawing.Point(537, 466);
+            this.btnLoadBackground.Location = new System.Drawing.Point(1038, 599);
             this.btnLoadBackground.Name = "btnLoadBackground";
             this.btnLoadBackground.Size = new System.Drawing.Size(150, 60);
             this.btnLoadBackground.TabIndex = 6;
@@ -177,7 +177,7 @@
             // 
             // btnSaveOutput
             // 
-            this.btnSaveOutput.Location = new System.Drawing.Point(920, 466);
+            this.btnSaveOutput.Location = new System.Drawing.Point(954, 896);
             this.btnSaveOutput.Name = "btnSaveOutput";
             this.btnSaveOutput.Size = new System.Drawing.Size(150, 60);
             this.btnSaveOutput.TabIndex = 7;
@@ -187,7 +187,7 @@
             // 
             // btnClearImage
             // 
-            this.btnClearImage.Location = new System.Drawing.Point(537, 36);
+            this.btnClearImage.Location = new System.Drawing.Point(71, 916);
             this.btnClearImage.Name = "btnClearImage";
             this.btnClearImage.Size = new System.Drawing.Size(150, 60);
             this.btnClearImage.TabIndex = 8;
@@ -198,7 +198,7 @@
             // cblsDevices
             // 
             this.cblsDevices.FormattingEnabled = true;
-            this.cblsDevices.Location = new System.Drawing.Point(39, 53);
+            this.cblsDevices.Location = new System.Drawing.Point(12, 747);
             this.cblsDevices.Name = "cblsDevices";
             this.cblsDevices.Size = new System.Drawing.Size(300, 28);
             this.cblsDevices.TabIndex = 9;
@@ -212,7 +212,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1200, 600);
+            this.Size = new System.Drawing.Size(1200, 1200);
+            this.ClientSize = new System.Drawing.Size(1200, 1200);
             this.Controls.Add(this.cblsDevices);
             this.Controls.Add(this.btnClearImage);
             this.Controls.Add(this.btnSaveOutput);
@@ -224,6 +225,8 @@
             this.Controls.Add(this.pbSource);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.MinimumSize = new System.Drawing.Size(1200, 1200);
+            this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultLocation;
             this.Name = "Main";
             this.Text = "Tabada Image Processor";
             ((System.ComponentModel.ISupportInitialize)(this.pbSource)).EndInit();

@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using AForge.Video.DirectShow;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using System.Threading;
+using static Tabada_IntSys1_ImageProcessingProgram.ImageProcessor;
 
 namespace Tabada_IntSys1_ImageProcessingProgram
 {
@@ -13,13 +11,33 @@ namespace Tabada_IntSys1_ImageProcessingProgram
     {
         private Bitmap _source, _background, _output;
         private ImageProcessor _processor;
+        private VideoCaptureDevice _vcd;
+        private FilterInfoCollection _fic;
+        private Bitmap _latestFrame;
+        private readonly object _frameLock;
+        private volatile bool _isProcessingOutputView;
+
+        private ProcessingMode _currentProcessingMode = ProcessingMode.None;
+
         public Main()
         {
             InitializeComponent();
             _source = null;
             _background = null;
             _output = null;
+            _latestFrame = null;
+
+            _isProcessingOutputView = false;
+            _frameLock = new object();
             _processor = new ImageProcessor();
+            _vcd = new VideoCaptureDevice();
+            _fic = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+
+            foreach (FilterInfo dev in _fic)
+            {
+                cblsDevices.Items.Add(dev.Name);
+                cblsDevices.SelectedIndex = 0;
+            }
         }
         private void ShowAlert(string message, string title = "Alert")
         {
@@ -31,12 +49,14 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             {
                 if (_source == null)
                     throw new Exception("Source image is not loaded.");
-
+                if (cbWebcamActivator.Checked)
+                {
+                    _currentProcessingMode = ProcessingMode.Copy;
+                    return;
+                }
                 _output = _processor.ToCopy(_source);
-
                 pbOutput.SizeMode = PictureBoxSizeMode.Zoom;
                 pbOutput.Image = _output;
-
             }
             catch (Exception ex)
             {
@@ -50,12 +70,14 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             {
                 if (_source == null)
                     throw new Exception("Source image is not loaded.");
-
+                if (cbWebcamActivator.Checked)
+                {
+                    _currentProcessingMode = ProcessingMode.Grayscale;
+                    return;
+                }
                 _output = _processor.ToGrayScale(_source);
-
                 pbOutput.SizeMode = PictureBoxSizeMode.Zoom;
                 pbOutput.Image = _output;
-
             }
             catch (Exception ex)
             {
@@ -69,12 +91,14 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             {
                 if (_source == null)
                     throw new Exception("Source image is not loaded.");
-
+                if (cbWebcamActivator.Checked)
+                {   
+                    _currentProcessingMode = ProcessingMode.Invert;
+                    return;
+                }
                 _output = _processor.ToInvert(_source);
-
                 pbOutput.SizeMode = PictureBoxSizeMode.Zoom;
                 pbOutput.Image = _output;
-
             }
             catch (Exception ex)
             {
@@ -88,12 +112,14 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             {
                 if (_source == null)
                     throw new Exception("Source image is not loaded.");
-
+                if (cbWebcamActivator.Checked)
+                {
+                    _currentProcessingMode = ProcessingMode.Sepia;
+                    return;
+                }
                 _output = _processor.ToSepia(_source);
-
                 pbOutput.SizeMode = PictureBoxSizeMode.Zoom;
                 pbOutput.Image = _output;
-
             }
             catch (Exception ex)
             {
@@ -107,12 +133,14 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             {
                 if (_source == null)
                     throw new Exception("Source image is not loaded.");
-
+                if (cbWebcamActivator.Checked)
+                {
+                    _currentProcessingMode = ProcessingMode.Histogram;
+                    return;
+                }
                 _output = _processor.ToHistogram(_source);
-
                 pbOutput.SizeMode = PictureBoxSizeMode.Zoom;
                 pbOutput.Image = _output;
-
             }
             catch (Exception ex)
             {
@@ -126,12 +154,14 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             {
                 if (_source == null || _background == null)
                     throw new Exception("Source or Background image is not loaded.");
-
+                if (cbWebcamActivator.Checked)
+                {
+                    _currentProcessingMode = ProcessingMode.Subtract;
+                    return;
+                }
                 _output = _processor.ToSubtract(_source,_background);
-
                 pbOutput.SizeMode = PictureBoxSizeMode.Zoom;
                 pbOutput.Image = _output;
-
             }
             catch (Exception ex)
             {
@@ -147,6 +177,7 @@ namespace Tabada_IntSys1_ImageProcessingProgram
             pbSource.Image = null;
             pbBackground.Image = null;
             pbOutput.Image = null;
+            _currentProcessingMode = ProcessingMode.None;
         }
 
         private static Bitmap convertTo24bpppRgb(Bitmap img)
@@ -231,13 +262,107 @@ namespace Tabada_IntSys1_ImageProcessingProgram
 
         private void cbWebcamActivator_CheckedChanged(object sender, EventArgs e)
         {
-
+            try
+            {
+                if (cbWebcamActivator.Checked)
+                {
+                    _vcd = new VideoCaptureDevice(_fic[cblsDevices.SelectedIndex].MonikerString);
+                    _vcd.NewFrame += (s, ev) =>
+                    {
+                        lock (_frameLock)
+                        {
+                            _latestFrame?.Dispose();
+                            _latestFrame = (Bitmap)ev.Frame.Clone();
+                            pbSource.Image?.Dispose();
+                            pbSource.SizeMode = PictureBoxSizeMode.Zoom;
+                            pbSource.Image = _latestFrame;
+                            _source = _latestFrame;
+                        }
+                    };
+                    _vcd.Start();
+                    tmrOutputReload.Start();
+                }
+                else
+                {
+                    _vcd.SignalToStop();
+                    _vcd.WaitForStop();
+                    tmrOutputReload.Stop();
+                    _currentProcessingMode = ProcessingMode.None;
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowAlert(ex.Message);
+            }
         }
-
 
         private void tmrOutputReload_Tick(object sender, EventArgs e)
         {
-
+            if (_isProcessingOutputView || _currentProcessingMode == ProcessingMode.None)
+                return;
+            _isProcessingOutputView = true;
+            Bitmap src = null;
+            lock (_frameLock)
+            {
+                src = _latestFrame == null ? null : (Bitmap)_latestFrame.Clone();
+            }
+            if (src == null)
+            {
+                _isProcessingOutputView = false;
+                return;
+            }
+            ThreadPool.QueueUserWorkItem(_ =>
+            {
+                Bitmap processed = null;
+                try
+                {
+                    switch (_currentProcessingMode)
+                    {
+                        case ProcessingMode.Copy:
+                            processed = _processor.ToCopy(src);
+                            break;
+                        case ProcessingMode.Grayscale:
+                            processed = _processor.ToGrayScale(src);
+                            break;
+                        case ProcessingMode.Invert:
+                            processed = _processor.ToInvert(src);
+                            break;
+                        case ProcessingMode.Sepia:
+                            processed = _processor.ToSepia(src);
+                            break;
+                        case ProcessingMode.Histogram:
+                            processed = _processor.ToHistogram(src);
+                            break;
+                        case ProcessingMode.Subtract:
+                            if (_background != null)
+                                processed = _processor.ToSubtract(src, _background);
+                            break;
+                    }
+                    if (processed != null)
+                    {
+                        pbOutput.Invoke((MethodInvoker)delegate
+                        {
+                            pbOutput.SizeMode = PictureBoxSizeMode.Zoom;
+                            pbOutput.Image?.Dispose();
+                            pbOutput.Image = processed;
+                            _output = processed;
+                        });
+                    }
+                    else
+                    {
+                        src.Dispose();
+                    }
+                }
+                catch
+                {
+                    processed?.Dispose();
+                    src.Dispose();
+                }
+                finally
+                {
+                    _isProcessingOutputView = false;
+                }
+            });
         }
     }
 }

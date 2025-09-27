@@ -1,7 +1,6 @@
 C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\bin\Debug\Tabada_IntSys1_ImageProcessingProgram.exe
 C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\bin\Debug\Tabada_IntSys1_ImageProcessingProgram.pdb
 C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\obj\Debug\Tabada_IntSys1_ImageProcessingProgram.csproj.AssemblyReference.cache
-C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\obj\Debug\Tabada_IntSys1_ImageProcessingProgram.MainForm.resources
 C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\obj\Debug\Tabada_IntSys1_ImageProcessingProgram.Properties.Resources.resources
 C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\obj\Debug\Tabada_IntSys1_ImageProcessingProgram.csproj.GenerateResource.cache
 C:\Users\Winston\source\repos\Tabada_IntSys1_ImageProcessingProgram\obj\Debug\Tabada_IntSys1_ImageProcessingProgram.csproj.CoreCompileInputs.cache
